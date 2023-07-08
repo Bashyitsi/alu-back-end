@@ -40,7 +40,7 @@ if employee_response.status_code == 200:
             f"({len(comp_tasks)}/{len(todos)}):"
         )
         for task in comp_tasks:
-            print(f"    {task}")
+            print(f"\t{task.expandtabs(4)}")  # Use expandtabs() for consistent tabulation
     else:
         print(f"Error: Failed  for employee" f" {employee_id}")
 else:
