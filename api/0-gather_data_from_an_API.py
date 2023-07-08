@@ -1,54 +1,29 @@
 #!/usr/bin/python3
-"""
-    python script that returns TODO list progress for a given employee ID
-"""
-import json
+""" Calls an API in order to get completed tasks """
 import requests
-from sys import argv
+import sys
 
 
-if __name__ == "__main__":
-    """
-        request user info by employee ID
-    """
-    request_employee = requests.get(
-        'https://jsonplaceholder.typicode.com/users/{}/'.format(argv[1]))
-    """
-        convert json to dictionary
-    """
-    employee = json.loads(request_employee.text)
-    """
-        extract employee name
-    """
-    employee_name = employee.get("name")
+if __name__ == '__main__':
+    userId = sys.argv[1]
+    url_todo = 'https://jsonplaceholder.typicode.com/users/1/todos/'
+    url_user = 'https://jsonplaceholder.typicode.com/users'
+    todo = requests.get(url_todo, params={'userId': userId})
+    user = requests.get(url_user, params={'id': userId})
 
-    """
-        request user's TODO list
-    """
-    request_todos = requests.get(
-        'https://jsonplaceholder.typicode.com/users/{}/todos'.format(argv[1]))
-    """
-        dictionary to store task status in boolean format
-    """
-    tasks = {}
-    """
-        convert json to list of dictionaries
-    """
-    employee_todos = json.loads(request_todos.text)
-    """
-        loop through dictionary & get completed tasks
-    """
-    for dictionary in employee_todos:
-        tasks.update({dictionary.get("title"): dictionary.get("completed")})
+    todo_dict_list = todo.json()
+    user_dict_list = user.json()
 
-    """
-        return name, total number of tasks & completed tasks
-    """
-    EMPLOYEE_NAME = employee_name
-    TOTAL_NUMBER_OF_TASKS = len(tasks)
-    NUMBER_OF_DONE_TASKS = len([k for k, v in tasks.items() if v is True])
-    print("Employee {} is done with tasks({}/{}):".format(
-        EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
-    for k, v in tasks.items():
-        if v is True:
-            print("\t {}".format(k))
+    completed_tasks = []
+    total_tasks = len(todo_dict_list)
+    employee = user_dict_list[0].get('name')
+
+    for task in todo_dict_list:
+        if task['completed']:
+            completed_tasks.append(task)
+
+    print("Employee {} is done with tasks({}/{}):"
+          .format(employee, len(completed_tasks), total_tasks))
+
+    for task in completed_tasks:
+        print("\t {}".format(task.get('title')))
