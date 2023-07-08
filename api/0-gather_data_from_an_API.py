@@ -11,7 +11,9 @@ if len(sys.argv) < 2:
 employee_id = sys.argv[1]
 
 # Make a GET request to the API endpoint to retrieve employee details
-employee_response = requests.get(f"https://jsonplaceholder.typicode.com/users/{employee_id}")
+employee_response = requests.get(
+    f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+)
 
 # Check if the request was successful (status code 200)
 if employee_response.status_code == 200:
@@ -21,7 +23,9 @@ if employee_response.status_code == 200:
     emp_name = employee_data["name"]
 
     # Make a GET request to retrieve the TODO list for the employee
-    todos_response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
+    todos_response = requests.get(
+        f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
+    )
 
     # Check if the request was successful (status code 200)
     if todos_response.status_code == 200:
@@ -31,10 +35,13 @@ if employee_response.status_code == 200:
         comp_tasks = [todo["title"] for todo in todos if todo["completed"]]
 
         # Display the employee TODO list progress
-        print(f"Employee {emp_name} is done with tasks ({len(comp_tasks)}/{len(todos)}):")
+        print(
+            f"Employee {emp_name} is done with tasks"
+            f"({len(comp_tasks)}/{len(todos)}):"
+        )
         for task in comp_tasks:
             print(f"    {task}")
     else:
-        print(f"Error: Failed to fetch TODO list for employee {employee_id}")
+        print(f"Error: Failed  for employee" f" {employee_id}")
 else:
-    print(f"Error: Failed to fetch employee {employee_id}")
+    print(f"Error: Failed  for employee" f"{employee_id}")
